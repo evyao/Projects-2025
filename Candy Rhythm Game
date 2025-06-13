@@ -1,0 +1,126 @@
+#JS file of a Candy Rhythm Game
+
+//array defines whether a candy appears or not, determines the rhythm of the game
+let count = -1;
+let score = 0;
+
+function generateArray(diff) {
+  let candyArr = [];
+  let length = 0;
+  let speed = 0;
+  if (diff == "easy"){
+    speed = 300;
+    length = 10;
+  }
+  if (diff == "medium"){
+    speed = 200;
+    length = 20;
+  }
+  if (diff == "hard"){
+    speed = 100;
+    length = 30;
+  }
+  for(let i = 0; i < length; i++)
+    {
+      if (i > 2 && candyArr[i - 2] == 0 && candyArr[i -1] == 0){
+        candyArr[i] = 1;
+      } 
+      else{
+        candyArr[i] = Math.round(Math.random()); 
+      }
+    }
+  goToGamePage('instructions.html')
+  document.getElementById("array").innerHTML = candyArr;
+  localStorage.setItem("candyArr", candyArr);
+  localStorage.setItem("speed", speed);
+}
+
+function createCandy() {
+  var img = document.createElement("img");
+  img.src =
+    "https://cdn.glitch.global/bf79883a-0ca9-42a3-9add-aa43952eb397/candy.PNG?v=1681786716509";
+  img.setAttribute("id", "candy");
+  document.getElementById("myContainer").appendChild(img);
+  let candyArr = localStorage.getItem("candyArr");
+  let speed = localStorage.getItem("speed");
+  if (speed == 300){
+    img.setAttribute("class", "easy");
+  }
+  else if (speed == 200){
+    img.setAttribute("class", "medium");
+  }
+  else{
+    img.setAttribute("class", "hard");
+  }
+}
+
+//this function checks an input array to see whether or not a candy should be created
+function checkArray(arr) {
+  count = add(count);
+  if (arr[count] == 1) {
+    createCandy();
+  }
+}
+
+function add(num) {
+  return num + 1;
+}
+
+function main() {
+  let candyArr = localStorage.getItem("candyArr");
+  let interval = localStorage.getItem("speed");
+  document.getElementById("test").innerHTML = interval;
+  setInterval(checkArray, interval, candyArr);
+  setInterval(removeCandy, 0);
+}
+
+function removeCandy(){
+  let element = document.getElementById("candy");
+  let candyXPos =
+    window.scrollX +
+    document.querySelector("#candy").getBoundingClientRect().left; // getting an element's position https://stackoverflow.com/a/52477551
+  let dotXPos =
+    window.scrollX +
+    document.querySelector("#dot").getBoundingClientRect().left;
+  if (dotXPos >= candyXPos + 150) {
+    element.remove();
+  }
+}
+
+//this function obtains an element's position to figure out whether it overlaps the goal dot
+function candyLocation() {
+  let candyXPos =
+    window.scrollX +
+    document.querySelector("#candy").getBoundingClientRect().left; // getting an element's position https://stackoverflow.com/a/52477551
+  let dotXPos =
+    window.scrollX +
+    document.querySelector("#dot").getBoundingClientRect().left;
+  if (dotXPos + 100 >= candyXPos && dotXPos - 100 <= candyXPos) {
+    let button = document.getElementById("button");
+    button.style.width = "200px";
+  } 
+  else {
+    document.getElementById("button").style.width = "100px";
+  }
+}
+
+function earnPoints() {
+  let element = document.getElementById("candy");
+  let candyXPos =
+    window.scrollX +
+    document.querySelector("#candy").getBoundingClientRect().left; // getting an element's position https://stackoverflow.com/a/52477551
+  let dotXPos =
+    window.scrollX +
+    document.querySelector("#dot").getBoundingClientRect().left;
+  if (dotXPos + 150 >= candyXPos && dotXPos - 150 <= candyXPos) {
+    score++;
+  }
+  document.getElementById("score").innerHTML = "Score: " + score;
+  element.remove();
+  document.getElementById('audio').play();
+}
+
+function goToGamePage(nextPage) {
+  window.location.href = nextPage;
+  location.replace(nextPage);
+}
