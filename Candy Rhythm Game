@@ -1,4 +1,4 @@
-#JS file of a Candy Rhythm Game
+//JS file of a Candy Rhythm Game
 
 //array defines whether a candy appears or not, determines the rhythm of the game
 let count = -1;
