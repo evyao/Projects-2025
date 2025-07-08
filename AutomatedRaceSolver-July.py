@@ -16,7 +16,7 @@ longitude = xxx  #Replace with race location's longitude
 
 live = f'https://api.solcast.com.au/data/live/radiation_and_weather?latitude={latitude}&longitude={longitude}&hours=168&api_key={api_key}&format=json'
 live_response = requests.get(live)
-forecast = f'https://api.solcast.com.au/data/forecast/radiation_and_weather?latitude=-33.86882&longitude=151.209295&hours=336&api_key={api_key}&format=json'
+forecast = f'https://api.solcast.com.au/data/forecast/radiation_and_weather?latitude={latitude}&longitude={longitude}&hours=336&api_key={api_key}&format=json'
 forecast_response = requests.get(forecast)
 print("ran")
 
